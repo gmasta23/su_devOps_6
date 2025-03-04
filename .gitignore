@@ -1,0 +1,46 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+*.env
+*.venv
+
+# Logs and database files
+*.log
+*.sqlite3
+instance/
+
+# Cache
+*.pyc
+*.pyo
+*.pyd
+*.swp
+
+# Flask-specific files
+*.pid
+instance/
+
+# Dependency files
+pip-log.txt
+pip-delete-this-directory.txt
+Pipfile
+Pipfile.lock
+
+# Docker-related
+*.dockerignore
+docker-compose.yml
+.env
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# IDE settings
+.vscode/
+.idea/
+*.iml
