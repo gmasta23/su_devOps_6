@@ -43,3 +43,14 @@ jobs:
         run: |
           docker build -t my-flask-app .
           docker run -d -p 5000:5000 --name flask_app my-flask-app
+
+  notify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.NEW_SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "✅ CI/CD Pipeline Succeeded!"
+          SLACK_COLOR: "#36a64f"
