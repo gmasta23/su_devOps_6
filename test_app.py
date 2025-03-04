@@ -10,4 +10,4 @@ def client():
 def test_home_page(client):
     response = client.get("/")
     assert response.status_code == 200
-    assert b"Welcome to Flask!" in response.data
+    assert b"CI/CD is Fun!" in response.data
