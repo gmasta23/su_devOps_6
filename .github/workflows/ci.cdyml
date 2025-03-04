@@ -4,9 +4,7 @@ on:  # Events that trigger this workflow
   push:  # Runs when code is pushed
     branches:
       - main
-  pull_request:  # Runs when a PR is created
-    branches:
-      - main
+      
 
 jobs:
   test:  # Define a job named 'test'
