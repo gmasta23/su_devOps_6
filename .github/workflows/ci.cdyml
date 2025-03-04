@@ -1,54 +1,42 @@
-name: CI/CD Pipeline  # The name of the workflow
+name: CI Pipeline
 
-on:  # Events that trigger this workflow
-  push:  # Runs when code is pushed
+on:
+  push:
     branches:
       - main
-      
 
 jobs:
-  test:  # Define a job named 'test'
-    runs-on: ubuntu-latest  # The OS where the job runs
-
-    steps:
-      - name: Checkout code  # Step 1: Get the repository code
-        uses: actions/checkout@v3
-
-      - name: Set up Python  # Step 2: Install Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9  # Change if you need a different version
-
-      - name: Install dependencies  # Step 3: Install required packages
-        run: |
-          python -m venv venv  # Create a virtual environment
-          source venv/bin/activate  # Activate virtual environment
-          pip install -r requirements.txt  # Install dependencies
-
-      - name: Run tests  # Step 4: Execute tests
-        run: |
-          source venv/bin/activate
-          pytest
-
-  deploy:
-    needs: test
+  test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Build and run Docker container
-        run: |
-          docker build -t my-flask-app .
-          docker run -d -p 5000:5000 --name flask_app my-flask-app
 
-  notify:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Slack Notification
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest
+
+      - name: Send Slack Notification on Success
+        if: success()
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_WEBHOOK: ${{ secrets.NEW_SLACK_WEBHOOK }}
-          SLACK_MESSAGE: "✅ CI/CD Pipeline Succeeded!"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "✅ CI/CD прошел успешно! 🚀"
           SLACK_COLOR: "#36a64f"
+
+      - name: Send Slack Notification on Failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "❌ Ошибка в CI/CD! Проверь логи. ⚠️"
+          SLACK_COLOR: "#ff0000"
